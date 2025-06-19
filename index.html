@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daulet Kaparov | Portfolio</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <canvas id="bg"></canvas>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="logo">Daulet Kaparov</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="about.html">About Me</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h2>Hi! I’m</h2>
+    <h1>Daulet Kaparov</h1>
+    <h2 id="roles" class="typing"></h2>
+    <h3>Computer Science & Economics @ University of Pennsylvania</h3>
+    <p>This site is my online portfolio—an evolving record of personal projects, from software hacks and data-driven experiments to insightful blog posts and reflections.</p>
+    <a href="#intro" class="scroll">Scroll to continue ↓</a>
+    <img src="https://media.giphy.com/media/L8K62iTDkzGX6/giphy.gif" alt="Cartoon boy with laptop" class="gif" />
+  </section>
+
+  <!-- Intro Section -->
+  <section id="intro" class="intro">
+    <h2>01. Intro</h2>
+    <p>I’m a <strong>rising sophomore</strong> at Penn, diving into <strong>Computer Science and Economics</strong>. I’m driven by <strong>curiosity</strong> and a love for building—whether that’s clean code that solves real problems or models that shed light on economic trends.</p>
+    <p>My passion lies at the intersection of <strong>tech and impact</strong>: I get most excited when working on projects that are mission-driven and meaningful. Whether it’s prototyping a data visualization tool, optimizing algorithms, or exploring behavioral insights, I’m always learning and aiming to make a difference.</p>
+    <p>I thrive in settings that combine <strong>rigor with creativity</strong>—and I’m constantly seeking new challenges to grow. Thanks so much for stopping by. Feel free to connect!</p>
+    <a href="about.html" class="btn reveal">More About Me →</a>
+    <p class="contact-email">Contact me: <a href="mailto:daulet@seas.upenn.edu">daulet@seas.upenn.edu</a></p>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="social">
+      <a href="https://www.linkedin.com/in/daulet-kaparov/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i><span>LinkedIn</span></a>
+      <a href="https://github.com/DauletKaparov" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i><span>GitHub</span></a>
+    </div>
+  </footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
+<script>
+// Typewriter Roles
+const roles = ["Software Engineer", "Computational Economist", "Boxing Enthusiast", "Turkish Dish Chef"]; 
+const roleEl = document.getElementById("roles");
+let roleIndex = 0, charIndex = 0, deleting = false;
+function type() {
+  if (!roleEl) return;
+  roleEl.textContent = roles[roleIndex].substring(0, charIndex);
+  if (!deleting && charIndex < roles[roleIndex].length) {
+    charIndex++;
+    setTimeout(type, 120);
+  } else if (deleting && charIndex > 0) {
+    charIndex--;
+    setTimeout(type, 60);
+  } else {
+    deleting = !deleting;
+    if (!deleting) roleIndex = (roleIndex + 1) % roles.length;
+    setTimeout(type, 800);
+  }
+}
+setTimeout(type, 500);
+
+
+
+
+// Three.js Background
+const canvas = document.getElementById('bg');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({canvas, alpha:true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+camera.position.z = 5;
+
+const starsGeometry = new THREE.BufferGeometry();
+const starVertices = [];
+for(let i=0;i<2000;i++){
+  starVertices.push((Math.random()-0.5)*100);
+  starVertices.push((Math.random()-0.5)*100);
+  starVertices.push((Math.random()-0.5)*100);
+}
+starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices,3));
+const starsMaterial = new THREE.PointsMaterial({color:0xffffff, size:0.2});
+const starField = new THREE.Points(starsGeometry, starsMaterial);
+scene.add(starField);
+
+function animateBg(){
+  requestAnimationFrame(animateBg);
+  starField.rotation.y += 0.0005;
+  renderer.render(scene, camera);
+}
+animateBg();
+
+window.addEventListener('mousemove', e=>{
+  const x = (e.clientX / window.innerWidth - 0.5) * 2;
+  const y = (e.clientY / window.innerHeight - 0.5) * 2;
+  starField.rotation.x = y * 0.5;
+  starField.rotation.y = x * 0.5;
+});
+window.addEventListener('resize', ()=>{
+  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// Scroll Reveal
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('show');
+      observer.unobserve(entry.target);
+    }
+  });
+},{threshold:0.1});
+
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>
