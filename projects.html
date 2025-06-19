@@ -18,10 +18,43 @@
     </ul>
   </nav>
 
-  <section class="hero">
-    <h1>Projects</h1>
-    <p>Coming soon! Stay tuned for cool projects.</p>
+  <section class="projects-intro">
+    <h1>Building things that matter</h1>
+    <p>Over the years I've chased curiosity wherever it led me: whether that was sketching out a quick mobile app prototype, automating a tedious browser task with a Chrome extension, or spinning up a data-science utility to make sense of messy numbers. As a CS & Econ student, I'm driven by two constants: a desire to build tools that help others, and a willingness to experiment until something sticks. Below you'll find a snapshot of my favorite side projects, born from questions I couldn't shake and problems I wanted to solve. Feel free to dive in and see what I've been up to!</p>
+    
   </section>
+
+  
+
+  <section class="projects-grid">
+    <div class="project-card">
+      <img src="https://source.unsplash.com/random/400x300?tech,code" alt="Project Screenshot" class="project-image">
+      <h3 class="project-title">Project Name</h3>
+      <p class="project-desc">Project description goes here. Brief overview of what the project does.</p>
+      <button class="project-details-btn">Project Details</button>
+      <div class="project-details">
+        <!-- Will be implemented later -->
+      </div>
+    </div>
+  </section>
+
+  <template id="card-template">
+    <div class="card">
+      <div class="card-inner">
+        <div class="card-front">
+          <img class="card-img" src="" alt="project thumbnail">
+          <h3 class="card-title"></h3>
+        </div>
+        <div class="card-back">
+          <p class="card-desc"></p>
+          <div class="overlay-btns">
+            <a class="btn-sm demo" href="#" target="_blank">View Demo</a>
+            <a class="btn-sm source" href="#" target="_blank">Source Code</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
 
   <footer class="footer">
     <div class="social">
@@ -29,5 +62,105 @@
       <a href="https://github.com/DauletKaparov" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
     </div>
   </footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.4/axios.min.js"></script>
+<script>
+const username = 'DauletKaparov';
+const grid = document.querySelector('.projects-grid');
+let repos = [];
+
+// Image directory for project thumbnails
+const IMAGE_DIR = 'images/projects/';
+
+function createProjectCard(repo) {
+  const card = document.createElement('div');
+  card.className = 'project-card';
+
+  // lowercase lookup key
+  const key = repo.name.toLowerCase();
+
+  // 1) override the display name if needed
+  const displayNames = {
+    'testing':  'NewsQuant',
+    // add other overrides here
+  };
+  const displayName = displayNames[key] || repo.name;
+
+  // 2) pick the correct image basename
+  const projectImages = {
+    'testing':   'newsquant',
+    'newsquant': 'newsquant',
+    'e-comm':    'ecomm',
+    'eduai':     'eduai',
+    'optiprints':'optiprints'
+  };
+  const imageBase = projectImages[key] || 'code';
+  const imageUrl  = `images/projects/${imageBase}.jpg`;
+
+  card.innerHTML = `
+    <div class="project-image-container">
+      <img
+        src="${imageUrl}"
+        alt="${displayName} Screenshot"
+        class="project-image"
+        onerror="this.src='images/projects/code.jpg'"
+      />
+    </div>
+    <div class="project-card-content">
+      <h3 class="project-title">${displayName}</h3>
+      <p class="project-desc">
+        ${repo.description || 'No description available.'}
+      </p>
+      <a href="${repo.html_url}" target="_blank" class="project-link">
+        View on GitHub
+      </a>
+      <button class="project-details-btn">Project Details</button>
+      <div class="project-details"><!-- … --></div>
+    </div>
+  `;
+  
+  return card;
+}
+
+
+
+async function init() {
+  try {
+    const res = await axios.get(`https://api.github.com/users/${username}/repos?per_page=100`);
+    // Filter out unwanted repos and sort remaining
+    repos = res.data.filter(r => !['personal', 'studentSheetMvp'].includes(r.name));
+    
+    // Custom ordering - only keep 'testing' in priority
+    const priorityOrder = ['testing'];
+    repos.sort((a, b) => {
+      const ia = priorityOrder.indexOf(a.name);
+      const ib = priorityOrder.indexOf(b.name);
+      if (ia === -1 && ib === -1) return 0;
+      if (ia === -1) return 1;
+      if (ib === -1) return -1;
+      return ia - ib;
+    });
+    
+    // Clear loading state if any
+    grid.innerHTML = '';
+    
+    // Add project cards
+    repos.forEach(repo => {
+      grid.appendChild(createProjectCard(repo));
+    });
+    
+  } catch(e) {
+    console.error('Failed to load projects:', e);
+    grid.innerHTML = '<p class="error">Failed to load projects. Please try again later.</p>';
+  }
+}
+
+// Initialize when DOM is loaded
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
 </body>
 </html>

@@ -127,19 +127,58 @@ body {
   60% { transform: translateY(-3px); }
 }
 
-.gif {
-  width: 500px;
-  max-width: 80vw;
-  height: auto;
-  margin: 2rem 0;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.4s ease;
+.project-image-container {
+  position: relative;
+  width: 100%;
+  padding-top: 60%; /* 3:5 aspect ratio */
+  overflow: hidden;
 }
 
-.gif:hover {
+.project-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.project-card:hover .project-image {
   transform: scale(1.05);
 }
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  padding: 0 2rem;
+  max-width: 1400px;
+  margin: 0 auto 4rem;
+}
+
+.projects-intro {
+  text-align: center;
+  max-width: 800px;       /* limits line length for readability */
+  margin: 0 auto;         /* centers the block */
+  padding: 0 20px;        /* horizontal “breathing room” */
+}
+
+.projects-intro h1 {
+  margin-bottom: 2em;   /* tighten space below the heading */
+}
+
+.projects-intro p {
+  line-height: 2;       /* improves paragraph readability */
+  margin-top: 3;          
+}
+
+.projects-intro {
+  margin-bottom: 5rem;  /* adjust the value as you like */
+}
+
+
+
 
 /* Footer */
 .footer {
@@ -147,6 +186,16 @@ body {
   padding: 1rem 0;
   text-align: center;
 }
+
+.footer-intro h1 {
+  margin-bottom: 0.5rem;
+}
+
+.footer-intro p {
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
 
 .social a {
   margin: 0 0.75rem;
