@@ -97,23 +97,48 @@ function createProjectCard(repo) {
   // lowercase lookup key
   const key = repo.name.toLowerCase();
 
-  // 1) override the display name if needed
+  // Project display names
   const displayNames = {
-    'testing':  'NewsQuant',
-    // add other overrides here
+    'testing': 'NewsQuant',
+    'e-comm': 'E-Commerce Microservices',
+    'eduai': 'EduAI Learning Platform',
+    'optiprints': 'OptiPrints',
+    'pennair-software-challenge': 'PennAIR Shape Detection'
   };
+  
   const displayName = displayNames[key] || repo.name;
 
-  // 2) pick the correct image basename
-  const projectImages = {
-    'testing':   'newsquant',
-    'newsquant': 'newsquant',
-    'e-comm':    'ecomm',
-    'eduai':     'eduai',
-    'optiprints':'optiprints'
+  // Project descriptions
+  const projectDescriptions = {
+    'testing': 'NewsQuant is an AI-powered news analyzer that processes financial news using NLP to extract key insights, sentiment, and stock tickers. Built with FastAPI and Transformers, it helps investors quickly understand market-moving events.',
+    'e-comm': 'A full-stack e-commerce platform built with Spring Boot microservices architecture. Features include JWT authentication, MongoDB integration, and event-driven communication via RabbitMQ. The system is containerized with Docker and includes comprehensive API documentation.',
+    'eduai': 'An adaptive learning platform that uses AI to generate personalized study materials. Features include GPT-4 integration for content generation, Bayesian knowledge tracing for adaptive difficulty, and a modern React + Tailwind UI. The platform continuously improves through user feedback.',
+    'optiprints': 'A cross-platform desktop application for real-time material detection and QR code scanning. Uses computer vision and AI to optimize material utilization and cutting positions. Features include IoT integration with USB cameras and support for DWG/SVG file formats.',
+    'pennair-software-challenge': 'A shape detection algorithm using OpenCV that identifies and classifies geometric shapes in both images and video streams. Includes adaptations for various backgrounds and lighting conditions.'
   };
+
+  // Project technologies
+  const projectTech = {
+    'testing': 'Python, FastAPI, Transformers, OpenCV',
+    'e-comm': 'Java, Spring Boot, MongoDB, RabbitMQ, Docker',
+    'eduai': 'React, Tailwind CSS, Node.js, GPT-4, Python',
+    'optiprints': 'Python, OpenCV, TensorFlow, Electron.js, SQLite',
+    'pennair-software-challenge': 'Python, OpenCV, NumPy'
+  };
+
+  // Project images
+  const projectImages = {
+    'testing': 'newsquant',
+    'e-comm': 'ecomm',
+    'eduai': 'eduai',
+    'optiprints': 'optiprints',
+    'pennair-software-challenge': 'opencv'
+  };
+
   const imageBase = projectImages[key] || 'code';
-  const imageUrl  = `images/projects/${imageBase}.jpg`;
+  const imageUrl = `images/projects/${imageBase}.jpg`;
+  const description = projectDescriptions[key] || (repo.description || 'No description available.');
+  const technologies = projectTech[key] || 'Various technologies';
 
   card.innerHTML = `
     <div class="project-image-container">
@@ -126,14 +151,13 @@ function createProjectCard(repo) {
     </div>
     <div class="project-card-content">
       <h3 class="project-title">${displayName}</h3>
-      <p class="project-desc">
-        ${repo.description || 'No description available.'}
-      </p>
-      <a href="${repo.html_url}" target="_blank" class="project-link">
-        View on GitHub
-      </a>
-      <button class="project-details-btn">Project Details</button>
-      <div class="project-details"><!-- … --></div>
+      <p class="project-tech">${technologies}</p>
+      <p class="project-desc">${description}</p>
+      <div class="project-links">
+        <a href="${repo.html_url}" target="_blank" class="project-link">
+          <i class="fab fa-github"></i> View on GitHub
+        </a>
+      </div>
     </div>
   `;
   
