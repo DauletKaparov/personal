@@ -117,14 +117,18 @@ main {
 }
 
 .about-image {
-  flex: 0 0 220px;
+  width: 100%;
   text-align: center;
-  margin: 0 auto;
+  margin: 0 auto 1rem; /* Reduced from 2rem to 1rem */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  order: -1; /* Move image above text on mobile */
 }
 
 .profile-pic {
-  width: 200px;
-  height: 200px;
+  width: 550px;
+  height: 550px;
   object-fit: cover;
   border-radius: 50%;
   border: 4px solid var(--primary);
@@ -137,7 +141,7 @@ main {
 }
 
 .about-bio p {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   font-size: 1.1rem;
   line-height: 1.8;
   color: #444;
